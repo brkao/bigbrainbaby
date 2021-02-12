@@ -1,1 +1,1 @@
-web: bin/bbb $PORT
+web: bbb $PORT
