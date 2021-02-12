@@ -43,7 +43,7 @@ func main() {
 
 		c.Data(200, "application/json", jsonResponse)
 	})
-	r.GET("/topPlain", func(c *gin.Context) {
+	r.GET("/topPlain.htm", func(c *gin.Context) {
 		response := (&rbot).topPlane()
 
 		c.Data(200, "text/plain", []byte(response))
