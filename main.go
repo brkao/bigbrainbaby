@@ -49,8 +49,6 @@ func main() {
 		c.Data(200, "text/html", []byte(response))
 	})
 
-	r.StaticFile("/top.htm", "./www/top.htm")
-
 	r.Run(serverPort)
 
 	fmt.Println("Main: Waiting for rbot & server to finish")
