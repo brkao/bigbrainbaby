@@ -1,8 +1,8 @@
-run: bin/bbb
+run: bin/bigbrainbaby
 	@PATH="$(PWD)/bin:$(PATH)" heroku local
 
 bin/bbb: main.go reddit.go
-	go build -o bin/bbb main.go reddit.go
+	go build -o bin/bigbrainbaby main.go reddit.go
 
 clean:
 	rm -rf bin
