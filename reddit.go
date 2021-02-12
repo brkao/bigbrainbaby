@@ -60,8 +60,10 @@ func (r *RedditBot) topPlain() string {
 	var ret string
 	ret = ret + fmt.Sprintf("<html><body>")
 
-	ret = ret + fmt.Sprintf("List in order of upvote velocity for all the DDs in [%s]<br><br>",
+	ret = ret + fmt.Sprintf("List in order of upvote velocity for all the DDs in [%s]<br>",
 		r.subreddit)
+	ret = ret + fmt.Sprintf("Currently tracking %d newest posts and %d historical velocities at %d second intervals<br><br>",
+		r.maxRecords, r.maxIntervals, r.interval)
 	for i, p := range r.recordList {
 
 		ret = ret + fmt.Sprintf("--->  %d <--- <br>", i)
