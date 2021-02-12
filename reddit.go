@@ -17,6 +17,9 @@ type RedditBot struct {
 	maxRecords      int32
 	maxIntervals    int32
 	updateCountdown int32
+
+	started    time.Time
+	lastUpdate time.Time
 }
 
 type PostRecord struct {
@@ -59,12 +62,14 @@ func (r *RedditBot) top() []byte {
 func (r *RedditBot) topPlain() string {
 
 	var ret string
-	ret = ret + fmt.Sprintf("<html><body>")
 
+	ret = ret + fmt.Sprintf("<html><body>")
 	ret = ret + fmt.Sprintf("List in order of upvote velocity for all the DDs in [%s]<br>",
 		r.subreddit)
 	ret = ret + fmt.Sprintf("Tracking up to %d newest posts with %d historical velocities at %d seconds intervals<br><br>",
 		r.maxRecords, r.maxIntervals, r.interval)
+	ret = ret + fmt.Sprintf("Server started on: %s<br>\n", fmt.Sprintf(r.started.String()))
+	ret = ret + fmt.Sprintf("Last updated on: %s<br>\n", fmt.Sprintf(r.lastUpdate.String()))
 	ret = ret + fmt.Sprintf("Next update in %d seconds<br>", r.updateCountdown)
 	for i, p := range r.recordList {
 
@@ -118,6 +123,8 @@ func (r *RedditBot) addNewRecord(po *PostRecord) {
 }
 
 func (r *RedditBot) start() {
+	r.started = time.Now()
+
 	b, err := reddit.NewBotFromAgentFile("profile", 0)
 	if err != nil {
 		fmt.Println("Failed to create bot handle:  ", err)
@@ -127,6 +134,7 @@ func (r *RedditBot) start() {
 	r.urlMap = make(map[string]*PostRecord)
 	fmt.Printf("Bot Start: maxIntervals %d interval %d maxRecords %d\n",
 		r.maxIntervals, r.interval, r.maxRecords)
+	r.lastUpdate = time.Now()
 	r.harvest()
 
 	ticker := time.NewTicker(time.Duration(r.interval) * time.Second)
@@ -135,6 +143,7 @@ func (r *RedditBot) start() {
 		select {
 		case <-ticker.C:
 			fmt.Println("Timer, harvesting")
+			r.lastUpdate = time.Now()
 			r.harvest()
 			fmt.Println("Harvest done")
 			for _, val := range r.recordList {

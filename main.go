@@ -34,9 +34,9 @@ func main() {
 
 	var rbot RedditBot
 	//this is in seconds
-	rbot.interval = 5 * 60
+	rbot.interval = 10 * 60
 	//how many velocity history to keep
-	rbot.maxIntervals = 6
+	rbot.maxIntervals = 8
 	//max number of links to track
 	rbot.maxRecords = 100
 
