@@ -116,7 +116,7 @@ func (r *RedditBot) start() {
 	r.bot = b
 	r.urlMap = make(map[string]*PostRecord)
 	fmt.Printf("Bot Start: maxIntervals %d interval %d maxRecords %d\n",
-		r.maxIntervals, r.maxRecords)
+		r.maxIntervals, r.interval, r.maxRecords)
 	r.harvest()
 
 	ticker := time.NewTicker(time.Duration(r.interval) * time.Second)
