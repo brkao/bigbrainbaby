@@ -10,11 +10,11 @@ import (
 var serverPort string
 
 func doConfig() {
-	args := os.Args
-	if len(args) == 1 {
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
 		serverPort = ":8080"
 	} else {
-		serverPort = ":" + args[1]
+		serverPort = ":" + port
 	}
 }
 

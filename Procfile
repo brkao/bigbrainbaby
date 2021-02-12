@@ -1,1 +1,1 @@
-web: bbb $PORT
+web: bbb
