@@ -1,0 +1,5 @@
+user_agent: "bigbrainbaby:harvester:0.1"
+client_id: "Aj-U8YwR4OESTw"
+client_secret: "y0Qt0H8vpyCxbof2Wu2zegMGl-nymA"
+username: "KryptekMore"
+password: "00000000"
