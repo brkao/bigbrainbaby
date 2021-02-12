@@ -1,6 +1,7 @@
-all: build
+run: bin/bbb
+	@PATH="$(PWD)/bin:$(PATH)" heroku local
 
-build:
+bin/bbb:
 	go build -o bin/bbb main.go reddit.go
 
 clean:
