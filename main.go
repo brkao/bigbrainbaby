@@ -44,9 +44,9 @@ func main() {
 		c.Data(200, "application/json", jsonResponse)
 	})
 	r.GET("/topPlain", func(c *gin.Context) {
-		response := (&rbot).topPlane()
+		response := (&rbot).topPlain()
 
-		c.Data(200, "text/plain", []byte(response))
+		c.Data(200, "text/html", []byte(response))
 	})
 
 	r.StaticFile("/top.htm", "./www/top.htm")

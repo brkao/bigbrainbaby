@@ -55,10 +55,13 @@ func (r *RedditBot) top() []byte {
 	return ret
 }
 
-func (r *RedditBot) topPlane() string {
+func (r *RedditBot) topPlain() string {
 
 	var ret string
 	for i, p := range r.recordList {
+
+		ret = ret + fmt.Sprintf("<html><body>")
+
 		ret = ret + fmt.Sprintf("%d<br>", i)
 		ret = ret + fmt.Sprintf("http://www.reddit.com%s<br>", p.Url)
 		ret = ret + fmt.Sprintf("LastUp[%d] LastDown[%d] LastRatio[%f]<br>",
@@ -74,6 +77,7 @@ func (r *RedditBot) topPlane() string {
 			ret = ret + fmt.Sprintf("[%f] ", val)
 		}
 		ret = ret + fmt.Sprintf("<br>")
+		ret = ret + fmt.Sprintf("</html></body>")
 	}
 	return ret
 }
