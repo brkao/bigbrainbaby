@@ -62,7 +62,7 @@ func (r *RedditBot) topPlain() string {
 
 	ret = ret + fmt.Sprintf("List in order of upvote velocity for all the DDs in [%s]<br>",
 		r.subreddit)
-	ret = ret + fmt.Sprintf("Currently tracking %d newest posts and %d historical velocities at %d second intervals<br><br>",
+	ret = ret + fmt.Sprintf("Tracking up to %d newest posts with %d historical velocities at %d seconds intervals<br><br>",
 		r.maxRecords, r.maxIntervals, r.interval)
 	for i, p := range r.recordList {
 
