@@ -58,12 +58,11 @@ func (r *RedditBot) top() []byte {
 func (r *RedditBot) topPlain() string {
 
 	var ret string
+	ret = ret + fmt.Sprintf("<html><body>")
 	for i, p := range r.recordList {
 
-		ret = ret + fmt.Sprintf("<html><body>")
-
-		ret = ret + fmt.Sprintf("%d<br>", i)
-		ret = ret + fmt.Sprintf("http://www.reddit.com%s<br>", p.Url)
+		ret = ret + fmt.Sprintf("--->  %d <--- <br>", i)
+		ret = ret + fmt.Sprintf("<a href=\"http://www.reddit.com%s\">%s</a><br>", p.Url, p.Url)
 		ret = ret + fmt.Sprintf("LastUp[%d] LastDown[%d] LastRatio[%f]<br>",
 			p.LastUp, p.LastDown, p.LastRatio)
 		ret = ret + fmt.Sprintf("\tU Velocity:\t")
@@ -76,9 +75,9 @@ func (r *RedditBot) topPlain() string {
 		for _, val := range p.DownV {
 			ret = ret + fmt.Sprintf("[%f] ", val)
 		}
-		ret = ret + fmt.Sprintf("<br>")
-		ret = ret + fmt.Sprintf("</html></body>")
+		ret = ret + fmt.Sprintf("<br><br>")
 	}
+	ret = ret + fmt.Sprintf("</html></body>")
 	return ret
 }
 
