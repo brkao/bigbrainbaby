@@ -194,8 +194,8 @@ func (r *RedditBot) harvest() {
 			val.LastDown = down
 			val.LastUp = up
 
-			copy(val.UpV[1:], val.UpV[0:len(val.UpV)-2])
-			copy(val.DownV[1:], val.DownV[0:len(val.DownV)-2])
+			copy(val.UpV[1:], val.UpV[0:len(val.UpV)-1])
+			copy(val.DownV[1:], val.DownV[0:len(val.DownV)-1])
 
 			val.UpV[0] = UpV
 			val.DownV[0] = DownV
