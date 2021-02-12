@@ -108,7 +108,7 @@ func (r *RedditBot) addNewRecord(po *PostRecord) {
 }
 
 func (r *RedditBot) start() {
-	b, err := reddit.NewBotFromAgentFile(".profile", 0)
+	b, err := reddit.NewBotFromAgentFile("profile", 0)
 	if err != nil {
 		fmt.Println("Failed to create bot handle:  ", err)
 		return
