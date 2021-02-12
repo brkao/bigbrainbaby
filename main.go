@@ -5,11 +5,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"os"
 	"sync"
+	"time"
 )
 
 var serverPort string
 
 func doConfig() {
+	argv := os.Args
+	argc := len(argv)
+	fmt.Printf("argc %d\n", argc)
+	if argc != 1 {
+		for true {
+			fmt.Printf("SLEEPING 60 Min\n")
+			time.Sleep(60 * time.Minute)
+		}
+	}
+
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
 		serverPort = ":8080"

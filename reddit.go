@@ -9,13 +9,14 @@ import (
 )
 
 type RedditBot struct {
-	bot          reddit.Bot
-	subreddit    string
-	interval     int32
-	urlMap       map[string]*PostRecord
-	recordList   []*PostRecord
-	maxRecords   int32
-	maxIntervals int32
+	bot             reddit.Bot
+	subreddit       string
+	interval        int32
+	urlMap          map[string]*PostRecord
+	recordList      []*PostRecord
+	maxRecords      int32
+	maxIntervals    int32
+	updateCountdown int32
 }
 
 type PostRecord struct {
@@ -64,6 +65,7 @@ func (r *RedditBot) topPlain() string {
 		r.subreddit)
 	ret = ret + fmt.Sprintf("Tracking up to %d newest posts with %d historical velocities at %d seconds intervals<br><br>",
 		r.maxRecords, r.maxIntervals, r.interval)
+	ret = ret + fmt.Sprintf("Next update in %d seconds<br>", r.updateCountdown)
 	for i, p := range r.recordList {
 
 		ret = ret + fmt.Sprintf("--->  %d <--- <br>", i)
@@ -128,6 +130,7 @@ func (r *RedditBot) start() {
 	r.harvest()
 
 	ticker := time.NewTicker(time.Duration(r.interval) * time.Second)
+	countdownTicker := time.NewTicker(10 * time.Second)
 	for {
 		select {
 		case <-ticker.C:
@@ -138,15 +141,19 @@ func (r *RedditBot) start() {
 				val.printout()
 			}
 			fmt.Println("\n")
+		case <-countdownTicker.C:
+			r.updateCountdown = r.updateCountdown - 10
 		}
 	}
 }
 
 func (r *RedditBot) harvest() {
-	//harvest, err := r.bot.Listing(r.subreddit, "")
 	var params map[string]string
 	params = make(map[string]string)
 	//params["sort"] = "new"
+
+	//reset the countdown timer
+	r.updateCountdown = r.interval
 
 	harvest, err := r.bot.ListingWithParams(r.subreddit, params)
 	if err != nil {
