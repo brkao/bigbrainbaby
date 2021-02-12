@@ -30,7 +30,7 @@ func main() {
 	rbot.maxRecords = 100
 
 	//ths subreddit
-	rbot.subreddit = "/r/TrailerParkBets/new"
+	rbot.subreddit = "/r/WallStreetBets/new"
 
 	var wg sync.WaitGroup
 	fmt.Println("Main: starting redditBot")
