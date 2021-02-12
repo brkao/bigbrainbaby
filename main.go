@@ -3,11 +3,19 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"os"
 	"sync"
 )
 
+var serverPort string
+
 func doConfig() {
-	return
+	args := os.Args
+	if len(args) == 1 {
+		serverPort = ":8080"
+	} else {
+		serverPort = ":" + args[1]
+	}
 }
 
 func main() {
@@ -43,7 +51,7 @@ func main() {
 
 	r.StaticFile("/top.htm", "./www/top.htm")
 
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(serverPort)
 
 	fmt.Println("Main: Waiting for rbot & server to finish")
 	wg.Wait()

@@ -1,1 +1,1 @@
-worker: bin/bbb
+web: bin/bbb $PORT
