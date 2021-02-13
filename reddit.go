@@ -63,13 +63,19 @@ func (r *RedditBot) topPlain() string {
 
 	var ret string
 
+	loc, err := time.LoadLocation("America/Los_Angeles")
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+
 	ret = ret + fmt.Sprintf("<html><body>")
 	ret = ret + fmt.Sprintf("List in order of upvote velocity for all the DDs in [%s]<br>",
 		r.subreddit)
 	ret = ret + fmt.Sprintf("Tracking up to %d newest posts with %d historical velocities at %d seconds intervals<br><br>",
 		r.maxRecords, r.maxIntervals, r.interval)
-	ret = ret + fmt.Sprintf("Server started on: %s<br>\n", fmt.Sprintf(r.started.String()))
-	ret = ret + fmt.Sprintf("Last updated on: %s<br>\n", fmt.Sprintf(r.lastUpdate.String()))
+	ret = ret + fmt.Sprintf("Server started on: %s<br>\n", fmt.Sprintf((r.started.In(loc)).String()))
+	ret = ret + fmt.Sprintf("Last updated on: %s<br>\n", fmt.Sprintf((r.lastUpdate.In(loc)).String()))
 	ret = ret + fmt.Sprintf("Next update in %d seconds<br>", r.updateCountdown)
 	for i, p := range r.recordList {
 
