@@ -1,5 +1,0 @@
-user_agent: "bigbrainbaby:harvester:0.1"
-client_id: "a7StVSzh7HCN_w"
-client_secret: "CBqWYmF4ODZEq32dQSOWKT_4i4h0Kg"
-username: "HaoAmazing"
-password: "00000000"
