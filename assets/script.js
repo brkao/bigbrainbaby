@@ -33,7 +33,7 @@ function drawSentimentChart() {
         return e.compound;
     });
     console.log(values); // ["10", "25", "55", "120"]
-    var chart = BuildChart(labels, values, "Sentiment");
+    var chart = BuildChart(labels, values, "Sentiment Score (Bullish[+] Bearish[-])");
 }
 
 function BuildChart(labels, values, chartTitle) {
