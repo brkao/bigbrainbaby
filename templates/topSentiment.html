@@ -4,10 +4,10 @@
 {{ template "header.html" .}}
 Click header to sort
 <div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:400px; float:left;">
+    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:450px; float:left;">
         <table class="sortable" id="byCountDataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
-                onclick="drawSentimentChart('topMoverByCountChart','byCountDataTable')">
+                onclick="drawSentimentChart('topMoverByCountChart','byCountDataTable','Sentiment of Top Movers by Count')">
                 <th>Symbol</th>
                 <th>Count</th>
                 <th>:Delta</th>
@@ -38,14 +38,15 @@ Click header to sort
 </div>
 <div class="chart-container" style="background: white; position: relative; height:30vh; width:40vw;">
     <canvas id="topMoverByCountChart" style=""></canvas>
-    <script type='text/javascript'> drawSentimentChart('topMoverByCountChart','byCountDataTable');</script>
+    <script type='text/javascript'> 
+        drawSentimentChart('topMoverByCountChart','byCountDataTable', 'Sentiment of Top Movers by Count');</script>
 </div>
 
 <div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:400px; float:left;">
+    <div style="background: #e9f7bc; width: 50%; max-width:450px; min-width:450px; float:left;">
         <table class="sortable" id="byCompoundDataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
-                onclick="drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable')">
+                onclick="drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable', 'Top Movers in Sentiment')">
                 <th>Symbol</th>
                 <th>Count</th>
                 <th>:Delta</th>
@@ -76,7 +77,8 @@ Click header to sort
 </div>
 <div class="chart-container" style="background: white; position: relative; height:30vh; width:40vw;">
     <canvas id="topMoverByCompoundChart" style=""></canvas>
-    <script type='text/javascript'> drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable'); </script>
+    <script type='text/javascript'>
+        drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable', 'Top Movers in Sentiment'); </script>
 </div>
 
 

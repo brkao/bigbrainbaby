@@ -4,9 +4,10 @@
 {{ template "header.html" .}}
 Click header to sort
 <div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:400px; float:left;">
+    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:450px; float:left;">
         <table class="sortable" id="dataTable" style="">
-            <thead bgcolor="74bb5e" style="cursor: pointer;" onclick="drawSentimentChart('myChart', 'dataTable')">
+            <thead bgcolor="74bb5e" style="cursor: pointer;"
+                onclick="drawSentimentChart('myChart', 'dataTable', 'Sentiment Score (Bullish[+] Bearish[-])')">
                 <th>Symbol</th>
                 <th>Count</th>
                 <th>:Delta</th>
@@ -59,7 +60,7 @@ Click header to sort
 </div>
 <div class="chart-container" style="background: white; position: relative; height:50vh; width:90vw;">
     <canvas id="myChart" style=""></canvas>
-    <script type='text/javascript'> drawSentimentChart("myChart","dataTable"); </script>
+    <script type='text/javascript'> drawSentimentChart("myChart","dataTable","Sentiment Score (Bullish[+] Bearish[-])"); </script>
 </div>
 
 <!--Embed the footer.html template at this location-->

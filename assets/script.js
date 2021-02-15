@@ -4,7 +4,7 @@ var randomColorGenerator = function () {
 
 var allCharts = {};
 
-function drawSentimentChart(chartName, dataTableName) {
+function drawSentimentChart(chartName, dataTableName, title) {
     var table = document.getElementById(dataTableName);
     var json = []; // First row needs to be headers
     var headers =[];
@@ -35,7 +35,7 @@ function drawSentimentChart(chartName, dataTableName) {
         return e.compound;
     });
     console.log(values); // ["10", "25", "55", "120"]
-    var chart = BuildChart(chartName, labels, values, "Sentiment Score (Bullish[+] Bearish[-])");
+    var chart = BuildChart(chartName, labels, values, title);
     allCharts[chartName] = chart;
 }
 
