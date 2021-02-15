@@ -2,21 +2,8 @@
 
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
-Top mentions and sentiment analysis from COMMENTS every 30 minutes from: 
-/r/wallstreetbets, /r/stocks, /r/investing, /r/stockmarket, /t/TrailerParkBets
-<pre>Current parameter:
-    - Only comments from posts that meet following criteria are considered.
-        - Posts that are considerd 'HOT' e.g. /r/wallstreetbets/hot
-        - Post Up vote ratio must be above .5 and has at least 5 up votes
-        - Posts with the following flairs OR without any flairs
-            {'DD', 'YOLO', 'Company Discussion', 'Daily Discussion', 'Weekend Discussion', 'Discussion'}
-    - Each user only count ONCE per Symbol
-    - Comments of the post must have at least 2 up votes
-</pre>
-<!--Loop over the payload variable, which is the list of articles-->
-<h3>Timestamp: {{.timestamp}}</h3>
-<div style="width: 100%;">
-    <div style="width: 25%; height: 100px; float: left; background: white;">
+<div class="container" style="width: 100%; background: white; display: flex;">
+    <div style="background: white;" >
         <table class="sortable" id="dataTable" onclick="drawSentimentChart()">
             <thead bgcolor="74c45e" style="cursor: pointer;">
                 <th>Symbol</th>
@@ -40,12 +27,35 @@ Top mentions and sentiment analysis from COMMENTS every 30 minutes from:
             </tbody>
         </table>
     </div>
-    <div style="margin-left: 28%; height: 100px; background: white;">
-        <div class="chart-container" style="position: relative; height:80vh; width:70vw">
+    <div style="flex-grow:1; background:white;">
+        <h3>Timestamp: {{.timestamp}}</h3>
+        <h4>Top mentions and sentiment analysis from COMMENTS every 30 minutes from: </h4>
+        <ul>
+            <li>/r/wallstreetbets</li>
+            <li>/r/stocks</li>
+            <li>/r/investing</li>
+            <li>/r/stockmarket</li>
+            <li>/t/TrailerParkBets<li>
+        </ul>
+
+        <h4>Current parameter:</h4>
+        <ul>
+            <li>Only comments from posts that meet following criteria are considered.</li>
+            <li>Posts that are considerd 'HOT' e.g. /r/wallstreetbets/hot</li>
+            <li>Post Up vote ratio must be above .5 and has at least 5 up votes</li>
+            <li>Posts with the following flairs OR without any flairs</li>
+            <li>{'DD', 'YOLO', 'Company Discussion', 'Daily Discussion', 'Weekend Discussion', 'Discussion'}</li>
+            <li>Each user only count ONCE per Symbol</li>
+            <li>Comments of the post must have at least 2 up votes</li>
+        </ul>
+    </div>
+</div>
+    <div style="background: white; position: relative;">
+        <div class="chart-container" style="position: relative; height:50vh; width:50vw">
             <canvas id="myChart"></canvas>
             <script type='text/javascript'> drawSentimentChart(); </script>
         </div>
     </div>
-</div>
+
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}
