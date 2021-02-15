@@ -1,0 +1,84 @@
+<!--topSentiment.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+Click header to sort
+<div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
+    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:400px; float:left;">
+        <table class="sortable" id="byCountDataTable" style="">
+            <thead bgcolor="74bb5e" style="cursor: pointer;"
+                onclick="drawSentimentChart('topMoverByCountChart','byCountDataTable')">
+                <th>Symbol</th>
+                <th>Count</th>
+                <th>:Delta</th>
+                <th style="display:none;">Compound</th>
+                <th>Overall</th>
+                <th>:Delta</th>
+                <th>Positive</th>
+                <th>Neutral</th>
+                <th>Negative</th>
+            </thead>
+            <tbody>
+            {{range $v := .payload}}
+            <tr>
+                <td>{{$v.Ticker}}</td>
+                <td>{{$v.Score.Count}}</td>
+                <td>{{$v.Score.CountDelta}}</td>
+                <td style="display:none;">{{$v.Score.Compound}}</td>
+                <td>{{$v.Score.Compound}}</td>
+                <td>{{$v.Score.CompoundDelta}}</td>
+                <td>{{$v.Score.Pos}}</td>
+                <td>{{$v.Score.Neu}}</td>
+                <td>{{$v.Score.Neg}}</td>
+             </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="chart-container" style="background: white; position: relative; height:30vh; width:40vw;">
+    <canvas id="topMoverByCountChart" style=""></canvas>
+    <script type='text/javascript'> drawSentimentChart('topMoverByCountChart','byCountDataTable');</script>
+</div>
+
+<div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
+    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:400px; float:left;">
+        <table class="sortable" id="byCompoundDataTable" style="">
+            <thead bgcolor="74bb5e" style="cursor: pointer;"
+                onclick="drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable')">
+                <th>Symbol</th>
+                <th>Count</th>
+                <th>:Delta</th>
+                <th style="display:none;">Compound</th>
+                <th>Overall</th>
+                <th>:Delta</th>
+                <th>Positive</th>
+                <th>Neutral</th>
+                <th>Negative</th>
+            </thead>
+            <tbody>
+            {{range $v := .payload}}
+            <tr>
+                <td>{{$v.Ticker}}</td>
+                <td>{{$v.Score.Count}}</td>
+                <td>{{$v.Score.CountDelta}}</td>
+                <td style="display:none;">{{$v.Score.Compound}}</td>
+                <td>{{$v.Score.Compound}}</td>
+                <td>{{$v.Score.CompoundDelta}}</td>
+                <td>{{$v.Score.Pos}}</td>
+                <td>{{$v.Score.Neu}}</td>
+                <td>{{$v.Score.Neg}}</td>
+             </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="chart-container" style="background: white; position: relative; height:30vh; width:40vw;">
+    <canvas id="topMoverByCompoundChart" style=""></canvas>
+    <script type='text/javascript'> drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable'); </script>
+</div>
+
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

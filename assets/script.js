@@ -2,10 +2,10 @@ var randomColorGenerator = function () {
     return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
 };
 
-var mySentimentChart = null;
+var allCharts = {};
 
-function drawSentimentChart() {
-    var table = document.getElementById('dataTable');
+function drawSentimentChart(chartName, dataTableName) {
+    var table = document.getElementById(dataTableName);
     var json = []; // First row needs to be headers
     var headers =[];
     for (var i = 0; i < table.rows[0].cells.length; i++) {
@@ -35,15 +35,15 @@ function drawSentimentChart() {
         return e.compound;
     });
     console.log(values); // ["10", "25", "55", "120"]
-    var chart = BuildChart(labels, values, "Sentiment Score (Bullish[+] Bearish[-])");
-    mySentimentChart = chart;
+    var chart = BuildChart(chartName, labels, values, "Sentiment Score (Bullish[+] Bearish[-])");
+    allCharts[chartName] = chart;
 }
 
-function BuildChart(labels, values, chartTitle) {
-  if (mySentimentChart != null) {
-      mySentimentChart.destroy();
+function BuildChart(chartName, labels, values, chartTitle) {
+  if (allCharts[chartName] != null) {
+      allCharts[chartName].destroy();
   }
-  var ctx = document.getElementById("myChart").getContext('2d');
+  var ctx = document.getElementById(chartName).getContext('2d');
   var colors = new Array();
 
   values.forEach(function (item, index) {

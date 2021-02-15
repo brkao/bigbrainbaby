@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"sort"
+	"strconv"
 	"time"
 )
 
@@ -30,11 +31,13 @@ type PostRecord struct {
 }
 
 type SentimentScore struct {
-	Neg      float32 `json:"neg"`
-	Neu      float32 `json:"neu"`
-	Pos      float32 `json:"pos"`
-	Compound float32 `json:"compound"`
-	Count    int     `json:"count"`
+	Neg           float32 `json:"neg"`
+	Neu           float32 `json:"neu"`
+	Pos           float32 `json:"pos"`
+	Compound      float32 `json:"compound"`
+	Count         int     `json:"count"`
+	CompoundDelta float32
+	CountDelta    int
 }
 
 type SentimentMap struct {
@@ -69,33 +72,9 @@ func doConfig() {
 	}
 }
 
-func getLatestSentiment1() (*SentimentMap, error) {
-	var s SentimentMap
-
-	c, err := redis.DialURL(os.Getenv("REDIS_URL"), redis.DialTLSSkipVerify(true))
-	if err != nil {
-		fmt.Printf("Error connecting to REDIS\n")
-		return nil, err
-	}
-	defer c.Close()
-
-	value, err := redis.String(c.Do("LINDEX", "sentiment_scores", "0"))
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	err = json.Unmarshal([]byte(value), &s)
-	if err != nil {
-		fmt.Printf("Unmarshal err: %v\n", err)
-		return nil, err
-	}
-
-	return &s, nil
-
-}
-
 func getLatestSentiment() (*SentimentMap, error) {
 	var s SentimentMap
+	var s1 SentimentMap
 
 	c, err := redis.DialURL(os.Getenv("REDIS_URL"), redis.DialTLSSkipVerify(true))
 	if err != nil {
@@ -104,20 +83,61 @@ func getLatestSentiment() (*SentimentMap, error) {
 	}
 	defer c.Close()
 
-	value, err := redis.String(c.Do("LINDEX", "sentiment_scores", "0"))
+	entries, err := redis.Int(c.Do("LLEN", "sentiment_scores"))
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	err = json.Unmarshal([]byte(value), &s)
-	if err != nil {
-		fmt.Printf("Unmarshal err: %v\n", err)
-		return nil, err
+
+	//if the db doesn't have any entries, return blank
+	if entries == 0 {
+		return &s, nil
+	} else if entries == 1 {
+		//if there is one entry, the do not compute delta
+		value, err := redis.String(c.Do("LINDEX", "sentiment_scores", "0"))
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		err = json.Unmarshal([]byte(value), &s)
+		if err != nil {
+			fmt.Printf("Unmarshal err: %v\n", err)
+			return nil, err
+		}
+	} else {
+		v1, err := redis.String(c.Do("LINDEX", "sentiment_scores", "0"))
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		err = json.Unmarshal([]byte(v1), &s)
+		if err != nil {
+			fmt.Printf("Unmarshal err: %v\n", err)
+			return nil, err
+		}
+
+		v2, err := redis.String(c.Do("LINDEX", "sentiment_scores", "1"))
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		err = json.Unmarshal([]byte(v2), &s1)
+		if err != nil {
+			fmt.Printf("Unmarshal err: %v\n", err)
+			return nil, err
+		}
+		for symbol, sentiment := range s.Tickers {
+			oldSentiment, ok := s1.Tickers[symbol]
+			if ok {
+				sentiment.CountDelta = oldSentiment.Count - sentiment.Count
+				sentiment.CompoundDelta = oldSentiment.CompoundDelta - sentiment.CompoundDelta
+				s.Tickers[symbol] = sentiment
+			}
+		}
 	}
-
 	return &s, nil
-
 }
+
 func getLatestDDVelocity() (*DDVelocity, error) {
 	var v DDVelocity
 	loc, _ := time.LoadLocation(timeZone)
@@ -159,6 +179,52 @@ func showIndexPage(c *gin.Context) {
 	)
 }
 
+func showTopSentimentPage(c *gin.Context) {
+	var sentimentArr []Sentiment
+	p1 := c.Query("count")
+	count, err := strconv.Atoi(p1)
+	if err != nil {
+		count = 5
+	}
+
+	s, err := getLatestSentiment()
+	if err == nil {
+		entries := 0
+		for k, v := range s.Tickers {
+			sentimentArr = append(sentimentArr, Sentiment{k, v})
+			entries++
+			if entries >= count {
+				break
+			}
+		}
+		sort.Sort(SentimentByCount(sentimentArr))
+		// Call the HTML method of the Context to render a template
+		c.HTML(
+			// Set the HTTP status to 200 (OK)
+			http.StatusOK,
+			// Use the index.html template
+			"topSentiment.html",
+			// Pass the data that the page uses
+			gin.H{
+				"title":     fmt.Sprintf("Top %d Sentiment Page", count),
+				"timestamp": s.Timestamp,
+				"payload":   sentimentArr,
+			},
+		)
+	} else {
+		c.HTML(
+			// Set the HTTP status to 200 (OK)
+			http.StatusOK,
+			// Use the index.html template
+			"error.html",
+			// Pass the data that the page uses
+			gin.H{
+				"title":   "Error Page",
+				"message": err.Error(),
+			},
+		)
+	}
+}
 func showSentimentPage(c *gin.Context) {
 	var sentimentArr []Sentiment
 
@@ -231,6 +297,7 @@ func initRoutes(r *gin.Engine) {
 	r.GET("/", showIndexPage)
 	r.GET("/velocity", showVelocityPage)
 	r.GET("/sentiment", showSentimentPage)
+	r.GET("/topSentiment", showTopSentimentPage)
 }
 
 func main() {

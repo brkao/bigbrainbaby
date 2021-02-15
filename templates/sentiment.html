@@ -4,13 +4,15 @@
 {{ template "header.html" .}}
 Click header to sort
 <div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; width: 50%; max-width:400px; min-width:400px; float:left;">
+    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:400px; float:left;">
         <table class="sortable" id="dataTable" style="">
-            <thead bgcolor="74bb5e" style="cursor: pointer;" onclick="drawSentimentChart(1)">
+            <thead bgcolor="74bb5e" style="cursor: pointer;" onclick="drawSentimentChart('myChart', 'dataTable')">
                 <th>Symbol</th>
                 <th>Count</th>
+                <th>:Delta</th>
                 <th style="display:none;">Compound</th>
                 <th>Overall</th>
+                <th>:Delta</th>
                 <th>Positive</th>
                 <th>Neutral</th>
                 <th>Negative</th>
@@ -20,8 +22,10 @@ Click header to sort
             <tr>
                 <td>{{$v.Ticker}}</td>
                 <td>{{$v.Score.Count}}</td>
+                <td>{{$v.Score.CountDelta}}</td>
                 <td style="display:none;">{{$v.Score.Compound}}</td>
                 <td>{{$v.Score.Compound}}</td>
+                <td>{{$v.Score.CompoundDelta}}</td>
                 <td>{{$v.Score.Pos}}</td>
                 <td>{{$v.Score.Neu}}</td>
                 <td>{{$v.Score.Neg}}</td>
@@ -55,7 +59,7 @@ Click header to sort
 </div>
 <div class="chart-container" style="background: white; position: relative; height:50vh; width:90vw;">
     <canvas id="myChart" style=""></canvas>
-    <script type='text/javascript'> drawSentimentChart(0); </script>
+    <script type='text/javascript'> drawSentimentChart("myChart","dataTable"); </script>
 </div>
 
 <!--Embed the footer.html template at this location-->
