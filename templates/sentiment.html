@@ -2,15 +2,16 @@
 
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
-This page shows the top mentions and sentiment analysis every 30 minutes from: 
+Top mentions and sentiment analysis from COMMENTS every 30 minutes from: 
 /r/wallstreetbets, /r/stocks, /r/investing, /r/stockmarket, /t/TrailerParkBets
-<pre>Current criteria for post/comment to be considered:
-    - Posts that are considerd 'HOT' e.g. /r/wallstreetbets/hot
-    - Posts with the following flairs OR without any flairs
-        - {'DD', 'YOLO', 'Company Discussion', 'Daily Discussion', 'Weekend Discussion', 'Discussion'}
+<pre>Current parameter:
+    - Only comments from posts that meet following criteria are considered.
+        - Posts that are considerd 'HOT' e.g. /r/wallstreetbets/hot
+        - Post Up vote ratio must be above .5 and has at least 5 up votes
+        - Posts with the following flairs OR without any flairs
+            {'DD', 'YOLO', 'Company Discussion', 'Daily Discussion', 'Weekend Discussion', 'Discussion'}
     - Each user only count ONCE per Symbol
-    - Up vote ratio must be above .5 and has at least 5 up votes
-    - Comment must have at least 2 up votes
+    - Comments of the post must have at least 2 up votes
 </pre>
 <!--Loop over the payload variable, which is the list of articles-->
 <h3>Timestamp(PST): {{.timestamp}}</h3>
