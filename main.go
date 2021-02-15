@@ -138,8 +138,12 @@ func getLatestSentiment() (*SentimentMap, error) {
 		for symbol, sentiment := range s.Tickers {
 			oldSentiment, ok := s1.Tickers[symbol]
 			if ok {
-				sentiment.CountDelta = oldSentiment.Count - sentiment.Count
-				sentiment.CompoundDelta = oldSentiment.CompoundDelta - sentiment.CompoundDelta
+				sentiment.CountDelta = sentiment.Count - oldSentiment.Count
+				if oldSentiment.CompoundDelta == 0 {
+					sentiment.CompoundDelta = sentiment.Compound
+				} else {
+					sentiment.CompoundDelta = sentiment.CompoundDelta - oldSentiment.CompoundDelta
+				}
 				s.Tickers[symbol] = sentiment
 			}
 		}
