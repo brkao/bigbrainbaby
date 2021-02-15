@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var timeZone string = "America/New_York"
+
 var serverPort string
 var serverStartTime time.Time
 
@@ -93,6 +95,7 @@ func getLatestSentiment() (*SentimentMap, error) {
 }
 func getLatestDDVelocity() (*DDVelocity, error) {
 	var v DDVelocity
+	loc, _ := time.LoadLocation(timeZone)
 
 	c, err := redis.DialURL(os.Getenv("REDIS_URL"), redis.DialTLSSkipVerify(true))
 	if err != nil {
@@ -112,6 +115,7 @@ func getLatestDDVelocity() (*DDVelocity, error) {
 		return nil, err
 	}
 
+	v.LastUpdate = v.LastUpdate.In(loc)
 	return &v, nil
 }
 

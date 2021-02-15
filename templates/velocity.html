@@ -4,7 +4,7 @@
 {{ template "header.html" .}}
 Shows the top DD posts sorted by upvote velocity<br>
   <!--Loop over the payload variable, which is the list of articles-->
-  <h3>Timestamp(PST): {{.payload.LastUpdate}}</h3>
+  <h3>Timestamp: {{.payload.LastUpdate}}</h3>
   {{range .payload.RecordList}}
   <p> <a href="http://www.reddit.com{{.Url}}">{{.Url}}</a><br>
       LastUp[{{.LastUp}}] LastDown[{{.LastDown}}] LastRatio[{{.LastRatio}}]<br>

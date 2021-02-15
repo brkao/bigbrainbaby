@@ -14,11 +14,11 @@ Top mentions and sentiment analysis from COMMENTS every 30 minutes from:
     - Comments of the post must have at least 2 up votes
 </pre>
 <!--Loop over the payload variable, which is the list of articles-->
-<h3>Timestamp(PST): {{.timestamp}}</h3>
+<h3>Timestamp: {{.timestamp}}</h3>
 <div style="width: 100%;">
     <div style="width: 25%; height: 100px; float: left; background: white;">
-        <table class="table" id="dataTable">
-            <thead>
+        <table class="sortable" id="dataTable" onclick="drawSentimentChart()">
+            <thead bgcolor="74c45e" style="cursor: pointer;">
                 <th>Symbol</th>
                 <th>Count</th>
                 <th>Compound</th>
