@@ -1,0 +1,20 @@
+<!--header.html-->
+
+<!doctype html>
+<html>
+
+  <head>
+    <!--Use the title variable to set the title of the page-->
+    <title>{{ .title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+
+    <!--Use bootstrap to make the application look nice-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="./assets/script.js"></script>
+  </head>
+
+  <body class="container">
+    <!--Embed the menu.html template at this location-->
+    {{ template "menu.html" . }}
+    <p> Current Page: {{.title}} </p>

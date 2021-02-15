@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
+	"net/http"
 	"os"
 	"time"
 )
@@ -25,6 +26,18 @@ type PostRecord struct {
 	LastRatio float32   `json:"LastVoteRatio"`
 }
 
+type SentimentScore struct {
+	Neg      string `json:"neg"`
+	Neu      string `json:"neu"`
+	Pos      string `json:"pos"`
+	Compound string `json:"compound"`
+}
+
+type Sentiment struct {
+	Timestamp string                    `json:"timestamp"`
+	Tickers   map[string]SentimentScore `json:"tickers"`
+}
+
 func doConfig() {
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
@@ -33,39 +46,30 @@ func doConfig() {
 		serverPort = ":" + port
 	}
 }
+func getLatestSentiment() (*Sentiment, error) {
+	var s Sentiment
 
-func (d *DDVelocity) topPlain() string {
-	var ret string
+	c, err := redis.DialURL(os.Getenv("REDIS_URL"), redis.DialTLSSkipVerify(true))
+	if err != nil {
+		fmt.Printf("Error connecting to REDIS\n")
+		return nil, err
+	}
+	defer c.Close()
 
-	loc, err := time.LoadLocation("America/Los_Angeles")
+	value, err := redis.String(c.Do("LINDEX", "sentiment_scores", "0"))
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return nil, err
 	}
-	ret = ret + fmt.Sprintf("<html><body>")
-	ret = ret + fmt.Sprintf("Server started on: %s<br>\n", fmt.Sprintf((serverStartTime.In(loc)).String()))
-	for i, p := range d.RecordList {
-
-		ret = ret + fmt.Sprintf("--->  %d <--- <br>", i)
-		ret = ret + fmt.Sprintf("<a href=\"http://www.reddit.com%s\">%s</a><br>", p.Url, p.Url)
-		ret = ret + fmt.Sprintf("LastUp[%d] LastDown[%d] LastRatio[%f]<br>",
-			p.LastUp, p.LastDown, p.LastRatio)
-		ret = ret + fmt.Sprintf("\tU Velocity:\t")
-		for _, val := range p.UpV {
-			ret = ret + fmt.Sprintf("[%f] ", val)
-		}
-		ret = ret + fmt.Sprintf("<br>")
-
-		ret = ret + fmt.Sprintf("\tD Velocity:\t")
-		for _, val := range p.DownV {
-			ret = ret + fmt.Sprintf("[%f] ", val)
-		}
-		ret = ret + fmt.Sprintf("<br><br>")
+	err = json.Unmarshal([]byte(value), &s)
+	if err != nil {
+		fmt.Printf("Unmarshal err: %v\n", err)
+		return nil, err
 	}
-	ret = ret + fmt.Sprintf("</html></body>")
-	return ret
+
+	return &s, nil
+
 }
-
 func getLatestDDVelocity() (*DDVelocity, error) {
 	var v DDVelocity
 
@@ -90,15 +94,68 @@ func getLatestDDVelocity() (*DDVelocity, error) {
 	return &v, nil
 }
 
+func showIndexPage(c *gin.Context) {
+	// Call the HTML method of the Context to render a template
+	c.HTML(
+		// Set the HTTP status to 200 (OK)
+		http.StatusOK,
+		// Use the index.html template
+		"index.html",
+		// Pass the data that the page uses
+		gin.H{
+			"title":   "Index Page",
+			"payload": "Index",
+		},
+	)
+}
+
+func showSentimentPage(c *gin.Context) {
+	s, _ := getLatestSentiment()
+	fmt.Printf("%v\n", s)
+	// Call the HTML method of the Context to render a template
+	c.HTML(
+		// Set the HTTP status to 200 (OK)
+		http.StatusOK,
+		// Use the index.html template
+		"sentiment.html",
+		// Pass the data that the page uses
+		gin.H{
+			"title":   "Sentiment Page",
+			"payload": s,
+		},
+	)
+}
+
+func showVelocityPage(c *gin.Context) {
+	ddv, _ := getLatestDDVelocity()
+	// Call the HTML method of the Context to render a template
+	c.HTML(
+		// Set the HTTP status to 200 (OK)
+		http.StatusOK,
+		// Use the index.html template
+		"velocity.html",
+		// Pass the data that the page uses
+		gin.H{
+			"title":   "Velocity Page",
+			"payload": ddv,
+		},
+	)
+}
+
+func initRoutes(r *gin.Engine) {
+
+	r.GET("/", showIndexPage)
+	r.GET("/velocity", showVelocityPage)
+	r.GET("/sentiment", showSentimentPage)
+}
+
 func main() {
 	doConfig()
 	r := gin.Default()
+	r.LoadHTMLGlob("templates/*")
+	r.Static("/assets", "./assets")
 
-	r.GET("/topPlain", func(c *gin.Context) {
-		d, _ := getLatestDDVelocity()
-		response := d.topPlain()
-		c.Data(200, "text/html", []byte(response))
-	})
+	initRoutes(r)
 
 	r.Run(serverPort)
 

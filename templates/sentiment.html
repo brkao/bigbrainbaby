@@ -1,0 +1,37 @@
+<!--sentiment.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<!--Loop over the payload variable, which is the list of articles-->
+<h2>Timestamp: {{.payload.Timestamp}}</h2>
+
+<table class="table" id="dataTable">
+  <thead>
+    <th>Symbol</th>
+    <th>Compound</th>
+    <th>Positive</th>
+    <th>Neutral</th>
+    <th>Negative</th>
+  </thead>
+  <tbody>
+{{range $k, $v := .payload.Tickers}}
+    <tr>
+      <td>{{$k}}</td>
+      <td>{{$v.Compound}}</td>
+      <td>{{$v.Pos}}</td>
+      <td>{{$v.Neu}}</td>
+      <td>{{$v.Neg}}</td>
+    </tr>
+{{end}}
+
+  </tbody>
+</table>
+
+<div class="chart-container" style="position: relative; height:40vh; width:80vw">
+    <canvas id="myChart"></canvas>
+</div>
+<script type='text/javascript'> drawSentimentChart(); </script>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

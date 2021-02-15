@@ -1,0 +1,23 @@
+<!--velocity.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+  <!--Loop over the payload variable, which is the list of articles-->
+  <h2>Timestamp: {{.payload.LastUpdate}}</h2>
+  {{range .payload.RecordList}}
+  <p> <a href="http://www.reddit.com{{.Url}}">{{.Url}}</a><br>
+      LastUp[{{.LastUp}}] LastDown[{{.LastDown}}] LastRatio[{{.LastRatio}}]<br>
+      U Velocity:
+      {{range .UpV}}
+      [{{.}}]
+      {{end}}<br>
+      D Velocity:
+      {{range .DownV}}
+      [{{.}}]
+      {{end}}<br>
+  </p>
+
+  {{end}}
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}
