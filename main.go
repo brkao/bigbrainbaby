@@ -131,27 +131,33 @@ func showIndexPage(c *gin.Context) {
 }
 
 func showSentimentPage(c *gin.Context) {
-	s, _ := getLatestSentiment()
-
 	var sentimentArr []Sentiment
-	for k, v := range s.Tickers {
-		sentimentArr = append(sentimentArr, Sentiment{k, v})
-	}
-	sort.Sort(SentimentByCount(sentimentArr))
 
-	// Call the HTML method of the Context to render a template
-	c.HTML(
-		// Set the HTTP status to 200 (OK)
-		http.StatusOK,
-		// Use the index.html template
-		"sentiment.html",
-		// Pass the data that the page uses
-		gin.H{
-			"title":     "Sentiment Page",
-			"timestamp": s.Timestamp,
-			"payload":   sentimentArr,
-		},
-	)
+	s, err := getLatestSentiment()
+	if err == nil {
+		for k, v := range s.Tickers {
+			sentimentArr = append(sentimentArr, Sentiment{k, v})
+		}
+		sort.Sort(SentimentByCount(sentimentArr))
+		// Call the HTML method of the Context to render a template
+		c.HTML(
+			// Set the HTTP status to 200 (OK)
+			http.StatusOK,
+			// Use the index.html template
+			"sentiment.html",
+			// Pass the data that the page uses
+			gin.H{
+				"title":     "Sentiment Page",
+				"timestamp": s.Timestamp,
+				"payload":   sentimentArr,
+			},
+		)
+	} else {
+		c.JSON(200, gin.H{
+			"status":  "Error",
+			"message": "Sentiment Not Available",
+		})
+	}
 }
 
 func showVelocityPage(c *gin.Context) {
