@@ -2,8 +2,8 @@
 
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
-<div class="container" style="width: 100%; background: white; display: flex;">
-    <div style="background: white;" >
+<div class="container" style="width: 100%; background: white; display: flex; height: 600px;">
+    <div style="background: white; width: 50%; max-width:400px; float:left;">
         <table class="sortable" id="dataTable" onclick="drawSentimentChart()">
             <thead bgcolor="74c45e" style="cursor: pointer;">
                 <th>Symbol</th>
@@ -27,7 +27,7 @@
             </tbody>
         </table>
     </div>
-    <div style="flex-grow:1; background:white;">
+    <div style="background:blue; max-width:500px; min-width:400px;">
         <h3>Timestamp: {{.timestamp}}</h3>
         <h4>Top mentions and sentiment analysis from COMMENTS every 30 minutes from: </h4>
         <ul>
@@ -50,12 +50,10 @@
         </ul>
     </div>
 </div>
-    <div style="background: white; position: relative;">
-        <div class="chart-container" style="position: relative; height:50vh; width:50vw">
-            <canvas id="myChart"></canvas>
-            <script type='text/javascript'> drawSentimentChart(); </script>
-        </div>
-    </div>
+<div class="chart-container" style="background: white; position: relative; height:50vh; width:80vw;">
+    <canvas id="myChart" style=""></canvas>
+    <script type='text/javascript'> drawSentimentChart(); </script>
+</div>
 
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}
