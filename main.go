@@ -7,6 +7,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"net/http"
 	"os"
+	"sort"
 	"time"
 )
 
@@ -31,11 +32,30 @@ type SentimentScore struct {
 	Neu      string `json:"neu"`
 	Pos      string `json:"pos"`
 	Compound string `json:"compound"`
+	Count    int    `json:"count"`
+}
+
+type SentimentMap struct {
+	Timestamp string                    `json:"timestamp"`
+	Tickers   map[string]SentimentScore `json:"tickers"`
 }
 
 type Sentiment struct {
-	Timestamp string                    `json:"timestamp"`
-	Tickers   map[string]SentimentScore `json:"tickers"`
+	Ticker string
+	Score  SentimentScore
+}
+type SentimentByCount []Sentiment
+
+func (a SentimentByCount) Len() int {
+	return len(a)
+}
+
+func (a SentimentByCount) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a SentimentByCount) Less(i, j int) bool {
+	return a[i].Score.Count > a[j].Score.Count
 }
 
 func doConfig() {
@@ -46,8 +66,9 @@ func doConfig() {
 		serverPort = ":" + port
 	}
 }
-func getLatestSentiment() (*Sentiment, error) {
-	var s Sentiment
+
+func getLatestSentiment() (*SentimentMap, error) {
+	var s SentimentMap
 
 	c, err := redis.DialURL(os.Getenv("REDIS_URL"), redis.DialTLSSkipVerify(true))
 	if err != nil {
@@ -111,7 +132,13 @@ func showIndexPage(c *gin.Context) {
 
 func showSentimentPage(c *gin.Context) {
 	s, _ := getLatestSentiment()
-	fmt.Printf("%v\n", s)
+
+	var sentimentArr []Sentiment
+	for k, v := range s.Tickers {
+		sentimentArr = append(sentimentArr, Sentiment{k, v})
+	}
+	sort.Sort(SentimentByCount(sentimentArr))
+
 	// Call the HTML method of the Context to render a template
 	c.HTML(
 		// Set the HTTP status to 200 (OK)
@@ -120,8 +147,9 @@ func showSentimentPage(c *gin.Context) {
 		"sentiment.html",
 		// Pass the data that the page uses
 		gin.H{
-			"title":   "Sentiment Page",
-			"payload": s,
+			"title":     "Sentiment Page",
+			"timestamp": s.Timestamp,
+			"payload":   sentimentArr,
 		},
 	)
 }

@@ -1,3 +1,7 @@
+var randomColorGenerator = function () {
+    return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+};
+
 function drawSentimentChart() {
     var table = document.getElementById('dataTable');
     var json = []; // First row needs to be headers
@@ -34,6 +38,13 @@ function drawSentimentChart() {
 
 function BuildChart(labels, values, chartTitle) {
   var ctx = document.getElementById("myChart").getContext('2d');
+  var colors = new Array();
+
+  values.forEach(function (item, index) {
+    colors.push(randomColorGenerator());
+  })
+  console.log(colors);
+
   var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -41,23 +52,7 @@ function BuildChart(labels, values, chartTitle) {
       datasets: [{
         label: chartTitle, // Name the series
         data: values, // Our values
-        backgroundColor: [ // Specify custom colors
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [ // Add custom color borders
-          'rgba(255,99,132,1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1 // Specify bar border width
+        backgroundColor: colors,
       }]
     },
     options: {
