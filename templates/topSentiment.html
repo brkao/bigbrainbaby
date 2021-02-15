@@ -3,8 +3,8 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 Click header to sort
-<div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; width: 50%; max-width:450px; min-width:450px; float:left;">
+<div class="container" style="width: 100%; background: white; display: flex;">
+    <div style="background: #85ffa9; width: 450px; float:left;">
         <table class="sortable" id="byCountDataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
                 onclick="drawSentimentChart('topMoverByCountChart','byCountDataTable','Sentiment of Top Movers by Count')">
@@ -42,8 +42,8 @@ Click header to sort
         drawSentimentChart('topMoverByCountChart','byCountDataTable', 'Sentiment of Top Movers by Count');</script>
 </div>
 
-<div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #e9f7bc; width: 50%; max-width:450px; min-width:450px; float:left;">
+<div class="container" style="width: 100%; background: white; display: flex;">
+    <div style="background: #e9f7bc; width: 450px;float:left;">
         <table class="sortable" id="byCompoundDataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
                 onclick="drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable', 'Top Movers in Sentiment')">
