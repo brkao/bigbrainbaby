@@ -153,15 +153,36 @@ func showSentimentPage(c *gin.Context) {
 			},
 		)
 	} else {
-		c.JSON(200, gin.H{
-			"status":  "Error",
-			"message": "Sentiment Not Available",
-		})
+		c.HTML(
+			// Set the HTTP status to 200 (OK)
+			http.StatusOK,
+			// Use the index.html template
+			"error.html",
+			// Pass the data that the page uses
+			gin.H{
+				"title":   "Error Page",
+				"message": err.Error(),
+			},
+		)
 	}
 }
 
 func showVelocityPage(c *gin.Context) {
-	ddv, _ := getLatestDDVelocity()
+	ddv, err := getLatestDDVelocity()
+	if err != nil {
+		c.HTML(
+			// Set the HTTP status to 200 (OK)
+			http.StatusOK,
+			// Use the index.html template
+			"error.html",
+			// Pass the data that the page uses
+			gin.H{
+				"title":   "Error Page",
+				"message": err.Error(),
+			},
+		)
+		return
+	}
 	// Call the HTML method of the Context to render a template
 	c.HTML(
 		// Set the HTTP status to 200 (OK)
