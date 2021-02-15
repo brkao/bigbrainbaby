@@ -2,13 +2,15 @@
 
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
-<div class="container" style="width: 100%; background: white; display: flex; height: 600px;">
-    <div style="background: white; width: 50%; max-width:400px; float:left;">
-        <table class="sortable" id="dataTable" onclick="drawSentimentChart()">
-            <thead bgcolor="74c45e" style="cursor: pointer;">
+Click header to sort
+<div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
+    <div style="background: #85ffa9; width: 50%; max-width:400px; min-width:400px; float:left;">
+        <table class="sortable" id="dataTable" style="">
+            <thead bgcolor="74bb5e" style="cursor: pointer;" onclick="drawSentimentChart(1)">
                 <th>Symbol</th>
                 <th>Count</th>
-                <th>Compound</th>
+                <th style="display:none;">Compound</th>
+                <th>Overall</th>
                 <th>Positive</th>
                 <th>Neutral</th>
                 <th>Negative</th>
@@ -18,6 +20,7 @@
             <tr>
                 <td>{{$v.Ticker}}</td>
                 <td>{{$v.Score.Count}}</td>
+                <td style="display:none;">{{$v.Score.Compound}}</td>
                 <td>{{$v.Score.Compound}}</td>
                 <td>{{$v.Score.Pos}}</td>
                 <td>{{$v.Score.Neu}}</td>
@@ -27,7 +30,7 @@
             </tbody>
         </table>
     </div>
-    <div style="background:blue; max-width:500px; min-width:400px;">
+    <div style="background:#94adff; max-width:1200px;">
         <h3>Timestamp: {{.timestamp}}</h3>
         <h4>Top mentions and sentiment analysis from COMMENTS every 30 minutes from: </h4>
         <ul>
@@ -50,9 +53,9 @@
         </ul>
     </div>
 </div>
-<div class="chart-container" style="background: white; position: relative; height:50vh; width:80vw;">
+<div class="chart-container" style="background: white; position: relative; height:50vh; width:90vw;">
     <canvas id="myChart" style=""></canvas>
-    <script type='text/javascript'> drawSentimentChart(); </script>
+    <script type='text/javascript'> drawSentimentChart(0); </script>
 </div>
 
 <!--Embed the footer.html template at this location-->
