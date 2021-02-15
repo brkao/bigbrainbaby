@@ -49,18 +49,27 @@ type Sentiment struct {
 	Ticker string
 	Score  SentimentScore
 }
+
 type SentimentByCount []Sentiment
 
-func (a SentimentByCount) Len() int {
-	return len(a)
+func (a SentimentByCount) Len() int           { return len(a) }
+func (a SentimentByCount) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a SentimentByCount) Less(i, j int) bool { return a[i].Score.Count > a[j].Score.Count }
+
+type SentimentByCountDelta []Sentiment
+
+func (a SentimentByCountDelta) Len() int      { return len(a) }
+func (a SentimentByCountDelta) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a SentimentByCountDelta) Less(i, j int) bool {
+	return a[i].Score.CountDelta > a[j].Score.CountDelta
 }
 
-func (a SentimentByCount) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
+type SentimentByCompoundDelta []Sentiment
 
-func (a SentimentByCount) Less(i, j int) bool {
-	return a[i].Score.Count > a[j].Score.Count
+func (a SentimentByCompoundDelta) Len() int      { return len(a) }
+func (a SentimentByCompoundDelta) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a SentimentByCompoundDelta) Less(i, j int) bool {
+	return a[i].Score.CompoundDelta > a[j].Score.CompoundDelta
 }
 
 func doConfig() {
@@ -180,7 +189,7 @@ func showIndexPage(c *gin.Context) {
 }
 
 func showTopSentimentPage(c *gin.Context) {
-	var sentimentArr []Sentiment
+	var byCountArr []Sentiment
 	p1 := c.Query("count")
 	count, err := strconv.Atoi(p1)
 	if err != nil {
@@ -189,15 +198,17 @@ func showTopSentimentPage(c *gin.Context) {
 
 	s, err := getLatestSentiment()
 	if err == nil {
-		entries := 0
 		for k, v := range s.Tickers {
-			sentimentArr = append(sentimentArr, Sentiment{k, v})
-			entries++
-			if entries >= count {
-				break
-			}
+			byCountArr = append(byCountArr, Sentiment{k, v})
 		}
-		sort.Sort(SentimentByCount(sentimentArr))
+		byCompoundArr := make([]Sentiment, len(byCountArr))
+		copy(byCompoundArr, byCountArr)
+		sort.Sort(SentimentByCountDelta(byCountArr))
+		sort.Sort(SentimentByCompoundDelta(byCompoundArr))
+
+		byCountArr = byCountArr[:count]
+		byCompoundArr = byCompoundArr[:count]
+
 		// Call the HTML method of the Context to render a template
 		c.HTML(
 			// Set the HTTP status to 200 (OK)
@@ -206,9 +217,10 @@ func showTopSentimentPage(c *gin.Context) {
 			"topSentiment.html",
 			// Pass the data that the page uses
 			gin.H{
-				"title":     fmt.Sprintf("Top %d Sentiment Page", count),
-				"timestamp": s.Timestamp,
-				"payload":   sentimentArr,
+				"title":           fmt.Sprintf("Top %d Sentiment Page", count),
+				"timestamp":       s.Timestamp,
+				"byCountDelta":    byCountArr,
+				"byCompoundDelta": byCompoundArr,
 			},
 		)
 	} else {

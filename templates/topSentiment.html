@@ -19,7 +19,7 @@ Click header to sort
                 <th>Negative</th>
             </thead>
             <tbody>
-            {{range $v := .payload}}
+            {{range $v := .byCountDelta}}
             <tr>
                 <td>{{$v.Ticker}}</td>
                 <td>{{$v.Score.Count}}</td>
@@ -58,7 +58,7 @@ Click header to sort
                 <th>Negative</th>
             </thead>
             <tbody>
-            {{range $v := .payload}}
+            {{range $v := .byCompoundDelta}}
             <tr>
                 <td>{{$v.Ticker}}</td>
                 <td>{{$v.Score.Count}}</td>
