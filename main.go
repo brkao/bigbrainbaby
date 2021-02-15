@@ -30,11 +30,11 @@ type PostRecord struct {
 }
 
 type SentimentScore struct {
-	Neg      string `json:"neg"`
-	Neu      string `json:"neu"`
-	Pos      string `json:"pos"`
-	Compound string `json:"compound"`
-	Count    int    `json:"count"`
+	Neg      float32 `json:"neg"`
+	Neu      float32 `json:"neu"`
+	Pos      float32 `json:"pos"`
+	Compound float32 `json:"compound"`
+	Count    int     `json:"count"`
 }
 
 type SentimentMap struct {
@@ -67,6 +67,31 @@ func doConfig() {
 	} else {
 		serverPort = ":" + port
 	}
+}
+
+func getLatestSentiment1() (*SentimentMap, error) {
+	var s SentimentMap
+
+	c, err := redis.DialURL(os.Getenv("REDIS_URL"), redis.DialTLSSkipVerify(true))
+	if err != nil {
+		fmt.Printf("Error connecting to REDIS\n")
+		return nil, err
+	}
+	defer c.Close()
+
+	value, err := redis.String(c.Do("LINDEX", "sentiment_scores", "0"))
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(value), &s)
+	if err != nil {
+		fmt.Printf("Unmarshal err: %v\n", err)
+		return nil, err
+	}
+
+	return &s, nil
+
 }
 
 func getLatestSentiment() (*SentimentMap, error) {
