@@ -2,9 +2,9 @@
 
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
-Click header to sort
+Click header to sort.   Timestamp: {{.timestamp}}
 <div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; min-width:600px; float:left;">
+    <div style="background: #85ffa9; min-width:750px; float:left;">
         <font size="3" face="Courier New" >
         <table class="sortable" id="dataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
@@ -38,8 +38,7 @@ Click header to sort
         </font>
     </div>
     <div style="background:#94adff;">
-        <h3>Timestamp: {{.timestamp}}</h3>
-        <h4>Top mentions and sentiment analysis from COMMENTS every 30 minutes from: </h4>
+        <h4>Top mentions and sentiment analysis from COMMENTS every 45 minutes from: </h4>
         <ul>
             <li>/r/wallstreetbets</li>
             <li>/r/stocks</li>
