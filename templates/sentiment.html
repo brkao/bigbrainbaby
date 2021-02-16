@@ -4,7 +4,8 @@
 {{ template "header.html" .}}
 Click header to sort
 <div class="container" style="width: 100%; background: white; display: flex; overflow: auto">
-    <div style="background: #85ffa9; width: 50%; min-width:450px; float:left;">
+    <div style="background: #85ffa9; min-width:600px; float:left;">
+        <font size="3" face="Courier New" >
         <table class="sortable" id="dataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
                 onclick="drawSentimentChart('myChart', 'dataTable', 'Sentiment Score (Bullish[+] Bearish[-])')">
@@ -34,8 +35,9 @@ Click header to sort
             {{end}}
             </tbody>
         </table>
+        </font>
     </div>
-    <div style="background:#94adff; max-width:1200px;">
+    <div style="background:#94adff;">
         <h3>Timestamp: {{.timestamp}}</h3>
         <h4>Top mentions and sentiment analysis from COMMENTS every 30 minutes from: </h4>
         <ul>

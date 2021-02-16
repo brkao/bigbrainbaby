@@ -5,7 +5,8 @@
 Click header to sort
 <div class="container" style="width: 100%; background: white; display: flex;">
     <div style="background: #85ffa9; float:left;">
-        <table class="sortable" id="byCountDataTable" style="">
+        <font face="Courier New" >
+        <table class="sortable" id="byCountDataTable" style="min-width:600px">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
                 onclick="drawSentimentChart('topMoverByCountChart','byCountDataTable','Sentiment of Top Movers by Count')">
                 <th>Symbol</th>
@@ -34,6 +35,7 @@ Click header to sort
             {{end}}
             </tbody>
         </table>
+        </font>
     </div>
 </div>
 <div class="chart-container" style="background: white; position: relative; height:30vh; width:40vw;">
@@ -44,6 +46,7 @@ Click header to sort
 
 <div class="container" style="width: 100%; background: white; display: flex;">
     <div style="background: #e9f7bc; float:left;">
+        <font size="3" face="Courier New" >
         <table class="sortable" id="byCompoundDataTable" style="">
             <thead bgcolor="74bb5e" style="cursor: pointer;"
                 onclick="drawSentimentChart('topMoverByCompoundChart','byCompoundDataTable', 'Top Movers in Sentiment')">
@@ -73,6 +76,7 @@ Click header to sort
             {{end}}
             </tbody>
         </table>
+        </font>
     </div>
 </div>
 <div class="chart-container" style="background: white; position: relative; height:30vh; width:40vw;">
