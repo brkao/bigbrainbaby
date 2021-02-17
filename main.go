@@ -237,6 +237,35 @@ func showTopSentimentPage(c *gin.Context) {
 		)
 	}
 }
+
+func getSentiment(c *gin.Context) {
+	var sentimentArr []Sentiment
+
+	s, err := getLatestSentiment()
+	if err == nil {
+		for k, v := range s.Tickers {
+			sentimentArr = append(sentimentArr, Sentiment{k, v})
+		}
+		sort.Sort(SentimentByCount(sentimentArr))
+		c.JSON(
+			http.StatusOK,
+			gin.H{
+				"status":    "success",
+				"timestamp": s.Timestamp,
+				"message":   sentimentArr,
+			},
+		)
+	} else {
+		c.JSON(
+			http.StatusOK,
+			gin.H{
+				"title":   "Error Page",
+				"message": err.Error(),
+			},
+		)
+	}
+}
+
 func showSentimentPage(c *gin.Context) {
 	var sentimentArr []Sentiment
 
@@ -308,8 +337,12 @@ func initRoutes(r *gin.Engine) {
 
 	r.GET("/", showIndexPage)
 	r.GET("/velocity", showVelocityPage)
+
 	r.GET("/sentiment", showSentimentPage)
+	r.GET("/sentiment/raw", getSentiment)
+
 	r.GET("/topSentiment", showTopSentimentPage)
+
 }
 
 func main() {
