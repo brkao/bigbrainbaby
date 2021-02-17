@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
@@ -352,6 +353,18 @@ func main() {
 	r.Static("/assets", "./assets")
 
 	initRoutes(r)
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://tpb-admin.netlify.app"},
+		AllowMethods:     []string{"GET"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://tpb-admin.netlify.app"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	r.Run(serverPort)
 
