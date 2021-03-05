@@ -349,22 +349,21 @@ func initRoutes(r *gin.Engine) {
 func main() {
 	doConfig()
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
-	r.Static("/assets", "./assets")
-
-	initRoutes(r)
-
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://tpb-admin.netlify.app"},
+		AllowOrigins:     []string{"https://tpb-admin.netlify.app", "http://localhost:3000"},
 		AllowMethods:     []string{"GET"},
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return origin == "https://tpb-admin.netlify.app"
-		},
+	    	},
 		MaxAge: 12 * time.Hour,
 	}))
+	r.LoadHTMLGlob("templates/*")
+	r.Static("/assets", "./assets")
+
+	initRoutes(r)
 
 	r.Run(serverPort)
 
