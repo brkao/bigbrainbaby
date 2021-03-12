@@ -1,4 +1,4 @@
-# bigbrainbaby
+# bigbrainbaby (http://bigbrainbaby.herokuapp.com)
 ---------------------------
 BigBrainBaby is a full stack application that is the user interface as well an API gateway.
 It is the interface between the user and the data collected by babymachine (https://github.com/brkao/babymachine)
